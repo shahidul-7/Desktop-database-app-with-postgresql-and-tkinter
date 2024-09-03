@@ -1,9 +1,6 @@
 import psycopg2
 from tkinter import *
 
-# Create tkinter window
-window = Tk()
-
 
 # Establish a connection to the PostgreSQL database
 connection = psycopg2.connect(
@@ -66,6 +63,8 @@ def fetch_items():
 
 
 
+
+
 # insert_items("Lichi", 65, 155)
 # update_item("Mango", 45, 45444)
 # delete_item("Lichi")
@@ -74,4 +73,3 @@ cur_sor.close()
 connection.close()
 
 
-window.mainloop()
