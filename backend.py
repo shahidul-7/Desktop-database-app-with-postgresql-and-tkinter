@@ -55,6 +55,6 @@ def update_item(id, title, author, year, isbn):
 
 connect()
 
-# print("Search")
-# delete_item(16) 
-# print(search_bookstore(year=2000))
+
+update_item(28, "Boner Bagh", "Tiger", 4566, 343334333)
+print(fatch_bookstore())

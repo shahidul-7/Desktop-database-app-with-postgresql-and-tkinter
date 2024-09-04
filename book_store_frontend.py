@@ -49,19 +49,80 @@ def delete_book():
         # Get the index of the selected item in the Listbox
         index = list_box.curselection()[0]
 
-        # # Get the text of the selected item (e.g., "ID, Title: title. Author: author, Year: year, ISBN: isbn")
-        # selected_text = list_box.get(index)
-        # # Extract the ID from the selected item text
-        # selected_str = (selected_text.split('.')[0].strip())
-        # selected_id = int(selected_str)
-        # # Delete the item from the database using the extracted ID
-        # backend.delete_item(selected_id)
+        # Get the text of the selected item (e.g., "ID, Title: title. Author: author, Year: year, ISBN: isbn")
+        selected_text = list_box.get(index)
+        # Extract the ID from the selected item text
+        selected_str = (selected_text.split('.')[0].strip())
+        selected_id = int(selected_str)
+        # Delete the item from the database using the extracted ID
+        backend.delete_item(selected_id)
 
         # Remove the item from the Listbox
         list_box.delete(index)
 
     except IndexError:
         pass
+
+# Update a Book
+def update_command():
+    try:
+        # Get the index of the selected item in the Listbox
+        index = list_box.curselection()[0]
+
+        # Get the text of the selected item (e.g., "ID, Title: title. Author: author, Year: year, ISBN: isbn")
+        selected_text = list_box.get(index)
+        # Extract the ID from the selected item text
+        selected_str = (selected_text.split('.')[0].strip())
+        selected_id = int(selected_str)
+        # Delete the item from the database using the extracted ID
+        backend.update_item(selected_id, title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
+
+        # Show updated intem in the Listbox
+        view_commend()
+
+    except IndexError:
+        pass
+
+# Show selected items in the entry fields 
+def populate_entries(event):
+    try:
+        # Get the index of the selected item in the Listbox
+        index = list_box.curselection()[0]
+        
+        # Get the text of the selected item (e.g., "5. Title: Howa, Author: Someone, Year: 2023, ISBN: 1234567890")
+        selected_text = list_box.get(index)
+        
+        # Extract the details from the selected item
+        details = selected_text.split(',')
+        title = details[0].split(':')[1].strip()
+        author = details[1].split(':')[1].strip()
+        year = details[2].split(':')[1].strip()
+        isbn = details[3].split(':')[1].strip()
+        
+        # Set the entry fields with the extracted details
+        title_entry.delete(0, END)
+        title_entry.insert(END, title)
+        
+        author_entry.delete(0, END)
+        author_entry.insert(END, author)
+        
+        year_entry.delete(0, END)
+        year_entry.insert(END, year)
+        
+        isbn_entry.delete(0, END)
+        isbn_entry.insert(END, isbn)
+    except IndexError:
+        pass  # Handle the case where no item is selected
+    except ValueError:
+        pass  # Handle the case where there is an issue with data extraction
+
+
+# Function to clear all entry fields
+def clear_entries():
+    title_entry.delete(0, END)
+    author_entry.delete(0, END)
+    year_entry.delete(0, END)
+    isbn_entry.delete(0, END)
 
 # Create the Window interface
 windows = Tk()
@@ -98,8 +159,10 @@ isbn_entry = Entry(windows, textvariable=isbn_text)
 isbn_entry.grid(row=2, column=3, padx=5, pady=5)
 
 # Create List Box
-list_box = Listbox(windows, height=15, width=55, font=("Arial", 14), bd=5, relief="sunken", highlightthickness=0, bg="lightblue")
+list_box = Listbox(windows, height=15, width=55, font=("Noto Sans Bengali", 14), bd=5, relief="sunken", highlightthickness=0, bg="lightblue")
 list_box.grid(row=3, column=0, rowspan=9, columnspan=4, padx=(10, 10), pady=(10, 10))
+# Bind the Listbox selection event to the populate_entries function
+list_box.bind('<<ListboxSelect>>', populate_entries)
 
 # Scrollbar
 scroll_bar = Scrollbar(windows)
@@ -123,17 +186,21 @@ search_entry.grid(row=4, column=5, padx=10, pady=2)
 add_entry = Button(windows, text="Add Entry", command=add_entry_command)
 add_entry.grid(row=5, column=5, padx=10, pady=2)
 
-update = Button(windows, text="Update Selected")
+update = Button(windows, text="Update Selected", command=update_command)
 update.grid(row=6, column=5, padx=10, pady=2)
 
 delete_entry = Button(windows, text="Delete Selected",command=delete_book)
 delete_entry.grid(row=7, column=5, padx=10, pady=2)
 
+# Add the Clear button
+clear_entries_button = Button(windows, text="Clear Entery", command=clear_entries)
+clear_entries_button.grid(row=8, column=5, padx=10, pady=2)
+
 close_window = Button(windows, text="Close", command=windows.destroy)
-close_window.grid(row=8, column=5, padx=10, pady=(2, 15))
+close_window.grid(row=9, column=5, padx=10, pady=(2, 15))
 
 # Apply common style to the widgets
-apply_common_style(windows, Entry, font=("Arial", 14), bd=5, relief="sunken", highlightthickness=0)
+apply_common_style(windows, Entry, font=("Noto Sans Bengali", 14), bd=5, relief="sunken", highlightthickness=0)
 apply_common_style(windows, Label, font=("Arial", 12, "bold"), padx=5, pady=10)
 apply_common_style(windows, Button, font=("Helvetica", 12, "bold"), bg="LightSteelBlue", padx=10, pady=10, width=15, bd=2, relief="groove", highlightthickness=0)
 
